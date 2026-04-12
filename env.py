@@ -88,8 +88,8 @@ class AirQualityEnv:
             reward_val = -0.5
             error = f"invalid_action:{act}"
 
-        # Natural pollution drift
-        self._state["aqi"] += random.randint(0, 5)
+        self._state["aqi"] += 2
+
 
         # Clamp values
         self._state["aqi"]      = max(0.0, self._state["aqi"])
