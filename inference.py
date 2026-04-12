@@ -213,4 +213,6 @@ def get_state():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=7860)
+    import os
+    port = int(os.environ.get("PORT", 7860))
+    app.run(host="0.0.0.0", port=port, use_reloader=False)
