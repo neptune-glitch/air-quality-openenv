@@ -78,10 +78,11 @@ def run_env(difficulty: str = "easy"):
         action_str = get_agent_action(client, obs_dict, difficulty)
         obs, reward, done, info = env.step(Action(action=action_str))
         obs_dict = obs.model_dump()
-        rewards.append(reward.value)
+        r = max(0.001, min(0.999, reward.value))  # ← clamp
+        rewards.append(r)                          # ← store clamped
         output.append(
             f"[STEP] step={obs.step} action={action_str} "
-            f"aqi={obs.aqi} reward={reward.value:.2f} "
+            f"aqi={obs.aqi} reward={r:.4f} "        # ← use clamped r
             f"done={str(done).lower()} error={info['error'] or 'null'}"
         )
 
