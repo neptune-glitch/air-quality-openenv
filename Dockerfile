@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "inference.py"]
+CMD ["python", "server/app.py"]
