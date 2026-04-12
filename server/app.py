@@ -54,3 +54,9 @@ def run_env(difficulty: str = "easy"):
     output.append(f"Final AQI: {obs_dict['aqi']} | Target: {env.task['target_aqi']} | Score: {score:.4f}")
 
     return HTMLResponse("<br>".join(output))
+def main():
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=7860)
+
+if __name__ == "__main__":
+    main()
