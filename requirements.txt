@@ -1,0 +1,5 @@
+numpy
+flask
+gymnasium
+pydantic
+openai

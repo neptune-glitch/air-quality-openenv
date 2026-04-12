@@ -1,0 +1,87 @@
+name: air-quality-env
+version: "1.0.0"
+description: >
+  A reinforcement learning environment where an AI agent manages industrial
+  emissions to reduce urban Air Quality Index (AQI) to safe levels.
+  Simulates real-world pollution control decisions faced by city authorities
+  and environmental regulators — particularly relevant for Delhi-NCR and
+  other high-pollution Indian cities.
+
+entry_point: env:AirQualityEnv
+
+author: holiday896
+license: MIT
+
+task:
+  type: sequential-decision
+  domain: environmental-control
+  real_world: true
+
+observation:
+  type: object
+  fields:
+    aqi:
+      type: float
+      description: Current Air Quality Index (0–500+). Lower is better.
+    emission:
+      type: float
+      description: Industrial emission level (0–100).
+    factories:
+      type: int
+      description: Number of active factories (0–5).
+    step:
+      type: int
+      description: Current timestep within the episode.
+    difficulty:
+      type: string
+      description: Task difficulty level (easy | medium | hard).
+    target_aqi:
+      type: float
+      description: AQI value the agent must reach to succeed.
+
+actions:
+  type: discrete
+  values:
+    - reduce_emission
+    - shutdown_factory
+    - increase_monitoring
+    - do_nothing
+
+reward:
+  range: [0.0, 1.0]
+  type: dense
+  description: >
+    Partial progress reward given every step based on AQI reduction.
+    Proportional bonus for actual AQI drop. Goal bonus (+0.3) when
+    target AQI is reached. Penalties for invalid or harmful actions.
+
+tasks:
+  - id: easy
+    description: Reduce AQI below 150
+    target_aqi: 150
+    max_steps: 10
+    start_aqi_range: [180, 250]
+
+  - id: medium
+    description: Reduce AQI below 100
+    target_aqi: 100
+    max_steps: 10
+    start_aqi_range: [200, 280]
+
+  - id: hard
+    description: Reduce AQI below 80
+    target_aqi: 80
+    max_steps: 10
+    start_aqi_range: [220, 300]
+
+interface:
+  reset: "returns Observation (Pydantic model)"
+  step: "accepts Action (Pydantic model), returns (Observation, Reward, done, info)"
+  state: "returns current Observation"
+  get_score: "returns float 0.0–1.0 based on AQI improvement"
+
+deployment:
+  platform: huggingface-spaces
+  sdk: docker
+  port: 7860
+  url: https://huggingface.co/spaces/holiday896/air-quality-env

@@ -1,0 +1,19 @@
+[project]
+name = "air-quality-env"
+version = "0.1.0"
+description = "OpenEnv environment for industrial air quality control"
+authors = [
+  { name = "holiday896" }
+]
+dependencies = [
+  "flask",
+  "pydantic",
+  "openai",
+  "openenv-core>=0.2.0"
+]
+
+[project.scripts]
+server = "server.app:main"
+
+[tool.openenv]
+entry_point = "env:AirQualityEnv"
