@@ -100,7 +100,7 @@ class AirQualityEnv:
         reward_val += aqi_drop * 0.01
 
         # Normalise to 0.0–1.0
-        reward_val = round(max(0.0, min(1.0, reward_val)), 4)
+        reward_val = round(max(0.001, min(0.999, reward_val)), 4)
 
         self._steps += 1
         target  = self.task["target_aqi"]
@@ -108,7 +108,7 @@ class AirQualityEnv:
         done    = success or self._steps >= self.task["max_steps"]
 
         if success:
-            reward_val = min(1.0, reward_val + 0.3)
+            reward_val = min(0.999, reward_val + 0.3)
 
         obs    = self._make_obs()
         reward = Reward(
@@ -121,7 +121,6 @@ class AirQualityEnv:
 
     def get_score(self) -> float:
         reduction = (self._initial_aqi - self._state["aqi"]) / max(1, self._initial_aqi)
-    # Must be strictly between 0 and 1 (not 0.0, not 1.0)
         score = max(0.001, min(0.999, reduction))
         return round(score, 4)
 
