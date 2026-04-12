@@ -85,7 +85,8 @@ def run_env(difficulty: str = "easy"):
             f"done={str(done).lower()} error={info['error'] or 'null'}"
         )
 
-    score = env.get_score()
+    raw_score = env.get_score()
+    score = max(0.001, min(0.999, raw_score))
     success = obs_dict["aqi"] < env.task["target_aqi"]
     output.append(f"[END] success={str(success).lower()} steps={obs.step} rewards={','.join([f'{r:.2f}' for r in rewards])}")
     output.append(f"Final AQI: {obs_dict['aqi']} | Target: {env.task['target_aqi']} | Score: {score:.4f}")

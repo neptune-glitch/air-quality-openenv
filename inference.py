@@ -58,9 +58,11 @@ def run_episode(client, difficulty="easy"):
         obs, reward, done, info = env.step(Action(action=action_str))
         obs_dict = obs.model_dump()
         rewards.append(reward.value)
-        print(f"[STEP] step={obs.step} action={action_str} aqi={obs.aqi} reward={reward.value:.2f} done={str(done).lower()} error={info['error'] or 'null'}")
+        r = max(0.001, min(0.999, reward.value))
+        print(f"[STEP] step={obs.step} action={action_str} aqi={obs.aqi} reward={reward.value:.4f} done={str(done).lower()} error={info['error'] or 'null'}")
 
-    score = env.get_score()
+    raw_score = env.get_score()
+    score = max(0.001, min(0.999, raw_score))
     success = obs_dict["aqi"] < env.task["target_aqi"]
     print(f"[END] success={str(success).lower()} steps={obs.step} rewards={','.join([f'{r:.2f}' for r in rewards])}")
     print(f"Final AQI: {obs_dict['aqi']} | Target: {env.task['target_aqi']} | Score: {score:.4f}")
